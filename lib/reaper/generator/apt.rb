@@ -37,7 +37,9 @@ module Reaper
 
       def sign_file_if_setup
         path = yield
-        #        signer.file(path) if signer
+        if(signer && options[:sign])
+          signer.file(path)
+        end
         path
       end
 
