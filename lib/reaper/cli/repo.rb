@@ -36,6 +36,7 @@ module Reaper
           ).generate!
         end
       end
+      alias_method :update, :create
 
     end
 
