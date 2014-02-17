@@ -10,9 +10,9 @@ module Reaper
     attr_reader :key_id, :sign_chunk_size, :sign_type, :package_system
 
     def initialize(args={})
-      @key_id = args[:key_id]
-      @sign_chunk_size = args[:sign_chunk_size] || 20
-      @sign_type = args[:sign_type] || 'origin'
+      @key_id = args[:signing_key]
+      @sign_chunk_size = args[:signing_chunk_size] || 20
+      @sign_type = args[:signing_type] || 'origin'
       @package_system = args[:package_system]
       case package_system.to_sym
       when :deb, :apt
