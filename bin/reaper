@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+require 'reaper'
+
+begin
+  Reaper::Cli.new.process!
+rescue Reaper::Error => e
+  $stderr.puts "ERROR: #{e.message}"
+  if(ENV['DEBUG'])
+    $stderr.puts "#{e.class}: #{e}\n#{e.backtrace.join("\n")}"
+  end
+  exit e.exit_code
+rescue => e
+  $stderr.puts "ERROR (unexpected): #{e.message}"
+  if(ENV['DEBUG'])
+    $stderr.puts "#{e.class}: #{e}\n#{e.backtrace.join("\n")}"
+  end
+  exit -2
+end
