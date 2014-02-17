@@ -12,12 +12,6 @@ module Reaper
 
     banner 'reaper ACTION'
 
-    CLI_MAP = {
-      :repo => Repo,
-      :package => Package,
-      :sign => Sign
-    }
-
     class << self
       # make options fall through
       def inherited(klass)
@@ -40,6 +34,18 @@ module Reaper
       :long => '--signing-type TYPE',
       :description => 'Signing type name'
     )
+    option(:sign,
+      :long => '--[no-]sign',
+      :description => 'Enable file signing',
+      :boolean => true,
+      :default => true
+    )
+
+    CLI_MAP = {
+      :repo => Repo,
+      :package => Package,
+      :sign => Sign
+    }
 
     class << self
       def init!
