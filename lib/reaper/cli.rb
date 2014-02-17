@@ -15,7 +15,7 @@ module Reaper
     class << self
       # make options fall through
       def inherited(klass)
-        klass.options = self.options
+        klass.options = MultiJson.load(MultiJson.dump(self.options.dup)).to_rash
       end
     end
 
@@ -39,6 +39,16 @@ module Reaper
       :description => 'Enable file signing',
       :boolean => true,
       :default => true
+    )
+    option(:package_system,
+      :short => '-s PACKAGE_SYSTEM',
+      :long => '--package-system PACKAGE_SYSTEM',
+      :description => 'Packaging system to generate repository (apt/yum)'
+    )
+    option(:packages_file,
+      :short => '-p FILE',
+      :long => '--packages-file FILE',
+      :description => 'Path to JSON packages file'
     )
 
     CLI_MAP = {
@@ -66,16 +76,14 @@ module Reaper
     end
 
     def help
-      opt_to_desc = self.class.options.values.map{|x|x[:long].length}.max + 2
+      opt_to_desc = self.class.options.values.map{|x|(x[:long] || x[:short]).length}.max + 2
       puts "Usage: #{self.class.banner} (options)"
       self.class.options.values.each do |opt|
-        str = [
-          opt[:short].split(' ').first,
-          opt[:long],
-        ].compact.join(', ') + [
+        str = opt[:short] ? "#{opt[:short].split(' ').first}, #{opt[:long]}" : (' ' * 4) + opt[:long]
+        str += [
           ' ' * (opt_to_desc - opt[:long].length),
-          opt[:required] ? '(Required)' : nil,
-          opt[:description]
+          opt[:description],
+          opt[:required] ? '(required)' : nil
         ].compact.join(' ')
         puts "\t#{str}"
       end
@@ -90,8 +98,7 @@ module Reaper
         help
         raise
       end
-      method = ARGV[1].to_sym
-      if(obj.class.instance_methods(false).map(&:to_sym).include?(method))
+      if(ARGV[1] && obj.class.instance_methods(false).map(&:to_sym).include?(method = ARGV[1].to_sym))
         obj.send(method)
       else
         obj.help

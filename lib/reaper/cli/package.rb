@@ -4,33 +4,25 @@ module Reaper
 
       banner 'reaper package (add|remove|description|version) [PACKAGE_FILE]'
 
-      option(:packages_file,
-        :short => '-p FILE',
-        :long => '--packages-file FILE',
-        :description => 'Path to JSON packages file',
-        :required => true
-      )
-
       option(:origin,
         :short => '-o NAME',
         :long => '--origin NAME',
         :description => 'Name of origin',
         :default => 'Default'
       )
-
       option(:codename,
         :short => '-c CODENAME',
         :long => '--codename CODENAME',
         :description => 'Code name to add package',
         :default => 'all'
       )
-
       option(:component,
         :short => '-C COMPONENT',
         :long => '--component COMPONENT',
         :description => 'Component name to add package',
         :default => 'main'
       )
+      options[:packages_file][:required] = true
 
       def add
         file_path = parse_options[2]

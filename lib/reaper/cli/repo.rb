@@ -2,13 +2,6 @@ module Reaper
   class Cli
     class Repo < Cli
 
-      option(:package_system,
-        :short => '-s PACKAGE_SYSTEM',
-        :long => '--package-system PACKAGE_SYSTEM',
-        :description => 'Packaging system to generate repository (apt/yum)',
-        :required => true
-      )
-
       option(:output_directory,
         :short => '-o DIRECTORY',
         :long => '--output-directory DIRECTORY',
@@ -16,13 +9,8 @@ module Reaper
         :description => 'Directory to output file structure',
         :required => true
       )
-
-      option(:packages_file,
-        :short => '-p FILE',
-        :long => '--packages-file FILE',
-        :description => 'Path to JSON packages file',
-        :required => true
-      )
+      options[:package_system][:required] = true
+      options[:packages_file][:required] = true
 
       def create
         parse_options
