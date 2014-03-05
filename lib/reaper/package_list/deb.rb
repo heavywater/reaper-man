@@ -10,12 +10,12 @@ module Reaper
         DEFAULT_ALL_MAP = ['amd64', 'i386']
 
         def initialize(args={})
-          @origin = args[:origin]
-          @dist = args[:codename]
-          @component = args[:component]
+          @origin = args[:origin].to_s
+          @dist = args[:codename].to_s
+          @component = args[:component].to_s
           @package_root = args.fetch(:package_root, DEFAULT_ROOT)
           @package_bucket = args.fetch(:package_bucket, DEFAULT_BUCKET)
-          unless(dist && component)
+          if(dist.empty? || component.empty?)
             raise 'Both `codename` and `component` must contain valid values'
           end
           @all_map = args.fetch(:all_map, DEFAULT_ALL_MAP)
@@ -24,8 +24,8 @@ module Reaper
         def add(hash, package)
           info = extract_fields(package)
           info.merge!(generate_checksums(package))
-          inject_package(hash, info, package)
-          true
+          filenames = inject_package(hash, info, package)
+          filenames
         end
 
         def remove(hash, package_name, version, args={})
@@ -53,7 +53,12 @@ module Reaper
         def inject_package(hash, info, package)
           arch = info['Architecture']
           arch = arch == 'all' ? all_map : [arch]
-          arch.each do |arch|
+          arch.map do |arch|
+            package_file_name = File.join(
+              package_root, package_bucket, origin,
+              dist, component, "binary-#{arch}",
+              File.basename(package)
+            )
             hash.deep_merge!(
               'apt' => {
                 origin => {
@@ -63,11 +68,7 @@ module Reaper
                         "binary-#{arch}" => {
                           info['Package'] => {
                             info['Version'] => info.merge!(
-                              'Filename' => File.join(
-                                package_root, package_bucket, origin,
-                                dist, component, "binary-#{arch}",
-                                File.basename(package)
-                              )
+                              'Filename' => package_file_name
                             )
                           }
                         }
@@ -77,8 +78,8 @@ module Reaper
                 }
               }
             )
+            package_file_name
           end
-          true
         end
 
         def generate_checksums(package)
