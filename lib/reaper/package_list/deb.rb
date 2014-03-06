@@ -71,6 +71,8 @@ module Reaper
                               'Filename' => package_file_name
                             )
                           }
+                        },
+                        "binary-i386" => {
                         }
                       }
                     }
