@@ -45,6 +45,7 @@ module Reaper
 
       def package_file(*args)
         pkgs = args.pop
+        args.insert(1, 'dists')
         create_file(*args.push('Packages')) do |file|
           pkgs.each do |pkg_name, pkgs|
             pkgs.each do |pkg_version, pkg_meta|
@@ -63,10 +64,10 @@ module Reaper
       def compress_file(*path)
         compressed_path = path.dup
         compressed_path.push("#{compressed_path.pop}.gz")
-        file = File.open(for_file(path))
+        base_file = File.open(for_file(path))
         create_file(compressed_path) do |file|
           compressor = Zlib::GzipWriter.new(file)
-          while(data = file.read(2048))
+          while(data = base_file.read(2048))
             compressor.write(data)
           end
           compressor.close
@@ -78,6 +79,7 @@ module Reaper
         header ? args.delete(header) : header = Rash.new
         header.merge(Rash[%w(Origin Codename Component Architecture).zip(args)])
         header['Date'] = Time.now.utc.strftime('%a, %d %b %Y %H:%M:%S %Z')
+        args.insert(1, 'dists')
         create_file(*args.dup.push('Release')) do |file|
           contents = Dir.glob(File.join(File.dirname(file.path), '**', '*'))
           header_content = header.map do |key, value|
