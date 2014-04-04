@@ -68,7 +68,8 @@ module Reaper
                         "binary-#{arch}" => {
                           info['Package'] => {
                             info['Version'] => info.merge!(
-                              'Filename' => package_file_name
+                              'Filename' => package_file_name,
+                              'Size' => File.size(package)
                             )
                           }
                         },
@@ -80,7 +81,7 @@ module Reaper
                 }
               }
             )
-            package_file_name
+            File.join('apt', origin, package_file_name)
           end
         end
 
