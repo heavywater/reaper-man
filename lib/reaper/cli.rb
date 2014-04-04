@@ -43,7 +43,7 @@ module Reaper
     option(:package_system,
       :short => '-s PACKAGE_SYSTEM',
       :long => '--package-system PACKAGE_SYSTEM',
-      :description => 'Packaging system to generate repository (apt/yum)'
+      :description => 'Packaging system to generate repository (apt/yum/rubygems)'
     )
     option(:packages_file,
       :short => '-p FILE',
