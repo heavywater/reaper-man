@@ -6,6 +6,7 @@ module Reaper
     class Processor
       autoload :Rpm, 'reaper/package_list/rpm'
       autoload :Deb, 'reaper/package_list/deb'
+      autoload :Gem, 'reaper/package_list/gem'
 
       include Utils::Process
       include Utils::Checksum
