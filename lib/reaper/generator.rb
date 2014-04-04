@@ -7,6 +7,7 @@ module Reaper
 
     autoload :Apt, 'reaper/generator/apt'
     autoload :Rpm, 'reaper/generator/rpm'
+    autoload :Rubygems, 'reaper/generator/rubygems'
 
     include Utils::Checksum
 
@@ -18,12 +19,7 @@ module Reaper
       @package_config = args.delete(:package_config)
       @signer = args.delete(:signer)
       @options = args
-      case package_system.to_sym
-      when :apt
-        extend Apt
-      when :rpm
-        extend Rpm
-      end
+      extend self.class.const_get(package_system.to_s.split('_').map(&:capitalize).join.to_sym)
     end
 
     def generate!
@@ -52,6 +48,18 @@ module Reaper
       path
     end
 
+    def compress_file(*path)
+      compressed_path = path.dup
+      compressed_path.push("#{compressed_path.pop}.gz")
+      base_file = File.open(for_file(path))
+      create_file(compressed_path) do |file|
+        compressor = Zlib::GzipWriter.new(file)
+        while(data = base_file.read(2048))
+          compressor.write(data)
+        end
+        compressor.close
+      end
+    end
 
   end
 
