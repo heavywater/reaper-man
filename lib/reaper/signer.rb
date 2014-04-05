@@ -4,6 +4,7 @@ module Reaper
 
     autoload :Rpm, 'reaper/signer/rpm'
     autoload :Deb, 'reaper/signer/deb'
+    autoload :Rubygems, 'reaper/signer/rubygems'
 
     include Utils::Process
 
@@ -19,6 +20,8 @@ module Reaper
         extend Deb
       when :rpm, :yum
         extend Rpm
+      when :gem, :rubygems
+        extend Rubygems
       else
         raise TypeError.new "Unknown packaging type requested (#{package_system})"
       end
