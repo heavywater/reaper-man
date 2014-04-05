@@ -2,6 +2,8 @@ module Reaper
   class Cli
     class Repo < Cli
 
+      banner 'reaper package (create|update)'
+
       option(:output_directory,
         :short => '-o DIRECTORY',
         :long => '--output-directory DIRECTORY',

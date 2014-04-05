@@ -10,12 +10,15 @@ module Reaper
 
     include Mixlib::CLI
 
-    banner 'reaper ACTION'
+    banner 'reaper (package|repo|sign)'
 
     class << self
       # make options fall through
       def inherited(klass)
-        klass.options = MultiJson.load(MultiJson.dump(self.options.dup)).to_rash
+        klass.send(:include, Mixlib::CLI)
+        self.options.each do |args|
+          klass.option(*args)
+        end
       end
     end
 
@@ -63,6 +66,28 @@ module Reaper
         obj.config = Config.new(obj.config)
         obj
       end
+
+      def process!
+        orig_out = $stdout
+        obj = nil
+        begin
+          if(ARGV.first && klass = CLI_MAP[ARGV.first.to_sym])
+            obj = klass.init!
+          else
+            help
+            exit -1
+          end
+        rescue => e
+          help
+          raise
+        end
+        if(ARGV[1] && obj.class.instance_methods(false).map(&:to_sym).include?(method = ARGV[1].to_sym))
+          obj.send(method)
+        else
+          obj.help
+        end
+      end
+
     end
 
     def actions
@@ -86,22 +111,6 @@ module Reaper
           opt[:required] ? '(required)' : nil
         ].compact.join(' ')
         puts "\t#{str}"
-      end
-    end
-
-    def process!
-      orig_out = $stdout
-      obj = nil
-      begin
-        obj = CLI_MAP[ARGV.first.to_sym].init!
-      rescue => e
-        help
-        raise
-      end
-      if(ARGV[1] && obj.class.instance_methods(false).map(&:to_sym).include?(method = ARGV[1].to_sym))
-        obj.send(method)
-      else
-        obj.help
       end
     end
 

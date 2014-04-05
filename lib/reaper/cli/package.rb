@@ -11,7 +11,7 @@ module Reaper
         :default => 'Default'
       )
       option(:codename,
-        :short => '-c CODENAME',
+        :short => '-N CODENAME',
         :long => '--codename CODENAME',
         :description => 'Code name to add package',
         :default => 'all'
