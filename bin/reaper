@@ -3,7 +3,7 @@
 require 'reaper'
 
 begin
-  Reaper::Cli.new.process!
+  Reaper::Cli.process!
 rescue Reaper::Error => e
   $stderr.puts "ERROR: #{e.message}"
   if(ENV['DEBUG'])
