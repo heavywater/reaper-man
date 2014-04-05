@@ -5,27 +5,26 @@ module Reaper
     module Rubygems
 
       def generate!
-        generate_gemstore(package_config[:rubygems])
+        generate_gemstore(package_config[:rubygem])
       end
 
       def generate_gemstore(gems)
         generate_indexing(gems)
-        generate_specs(gems)
+        write_quick_specs(gems.fetch(:release, {}))
+        write_quick_specs(gems.fetch(:prerelease, {}))
       end
 
       def generate_indexing(gems)
         build_spec_file('specs', gems.fetch(:release, {}))
         build_spec_file('latest_specs', gems.fetch(:release, {}))
         build_spec_file('prerelease', gems.fetch(:prerelease, {}))
-        write_quick_specs(gems.fetch(:release, {}))
-        write_quick_specs(gems.fetch(:prerelease, {}))
       end
 
       def create_index(gems)
         [].tap do |list|
           gems.each do |name, all|
             all.each do |version, info|
-              list << [name, Gem::Version.new(version), info[:platform]]
+              list << [name, Gem::Version.new(version.dup), info[:platform]]
             end
           end
         end
@@ -62,6 +61,9 @@ module Reaper
             end
             spec.version = Gem::Version.new(info[:version])
             spec.date = Time.parse(info[:date])
+            info[:dependencies].each do |dep|
+              spec.add_dependency(*dep)
+            end
             create_file('quick', marshal_path, "#{name}-#{version}.gemspec.rz") do |file|
               file.write(Marshal.dump(spec))
             end
