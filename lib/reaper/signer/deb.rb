@@ -2,13 +2,20 @@ module Reaper
   class Signer
     module Deb
 
+      SIGN_COMMAND = File.join(
+        File.expand_path(File.dirname(__FILE__), '..'),
+        'util-scripts/auto-debsigs'
+      )
+
       def package(*pkgs)
         pkgs = valid_packages(*pkgs)
         pkgs.each_slice(sign_chunk_size) do |pkgs|
-          opts = ["--sign='#{sign_type}'"]
-          opts.push("--default-key='#{key_id}'") if key_id
-          cmd = (['debsigs'] + opts + pkgs).join(' ')
-          shellout!(cmd)
+          shellout!(
+            "#{SIGN_COMMAND} #{sign_type} #{key_id} #{pkgs.join(' ')}",
+            :environment => {
+              'REAPER_KEY_PASSWORD' => key_pass
+            }
+          )
         end
       end
 
