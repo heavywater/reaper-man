@@ -1,0 +1,30 @@
+#!/usr/bin/expect -f
+
+log_user 0
+
+set timeout 3
+
+set signtype [lindex $argv 0]
+set signkey [lindex $argv 1]
+set package [join [lrange $argv 2 [llength $argv]] " "]
+
+spawn /bin/bash
+expect {
+  -re ".*\$ *$" {
+    send "/usr/bin/debsigs --sign=\"$signtype\" --default-key=\"$signkey\" $package\r"
+  }
+  timeout { exit 1 }
+}
+expect {
+  -re {Enter passphrase: *} {
+    send "$env(REAPER_KEY_PASSWORD)\r"
+  }
+  timeout { exit 2 }
+}
+expect {
+  -re {\$ *} {
+    send "exit $?\rexit $?\r"
+  }
+  timeout { exit 3 }
+}
+expect eof
