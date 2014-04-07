@@ -47,7 +47,7 @@ module Reaper
 
         def extract_fields(package)
           content = shellout("dpkg-deb -f '#{package}'")
-          Rash[content.scan(/([^\s][^:]+):\s+(([^\n]|\n\s)+)/).map{|a| a.slice(0,2)}]
+          Rash[content.stdout.scan(/([^\s][^:]+):\s+(([^\n]|\n\s)+)/).map{|a| a.slice(0,2)}]
         end
 
         def inject_package(hash, info, package)

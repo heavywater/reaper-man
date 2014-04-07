@@ -10,7 +10,7 @@ module Reaper
       def package(*pkgs)
         pkgs = valid_packages(*pkgs)
         pkgs.each_slice(sign_chunk_size) do |pkgs|
-          shellout!(
+          shellout(
             "#{SIGN_COMMAND} #{sign_type} #{key_id} #{pkgs.join(' ')}",
             :environment => {
               'REAPER_KEY_PASSWORD' => key_pass
