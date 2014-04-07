@@ -8,12 +8,13 @@ module Reaper
 
     include Utils::Process
 
-    attr_reader :key_id, :sign_chunk_size, :sign_type, :package_system
+    attr_reader :key_id, :sign_chunk_size, :sign_type, :package_system, :key_password
 
     def initialize(args={})
       @key_id = args[:signing_key]
       @sign_chunk_size = args[:signing_chunk_size] || 20
       @sign_type = args[:signing_type] || 'origin'
+      @key_password = args[:key_password]
       @package_system = args[:package_system]
       case package_system.to_sym
       when :deb, :apt

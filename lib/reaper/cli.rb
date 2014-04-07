@@ -126,7 +126,8 @@ module Reaper
       Signer.new(
         :key_id => config[:signing_key],
         :sign_type => config[:signing_type],
-        :package_system => config.fetch(:package_system, 'deb')
+        :package_system => config.fetch(:package_system, 'deb'),
+        :key_password => config.fetch(:signing_password, ENV['REAPER_GPG_PASSWORD'])
       )
     end
 
