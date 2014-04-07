@@ -12,7 +12,7 @@ module Reaper
 
     def initialize(args={})
       @key_id = args[:signing_key]
-      @sign_chunk_size = args[:signing_chunk_size] || 20
+      @sign_chunk_size = args[:signing_chunk_size] || 1
       @sign_type = args[:signing_type] || 'origin'
       @key_password = args[:key_password]
       @package_system = args[:package_system]
