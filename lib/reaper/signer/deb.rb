@@ -3,7 +3,7 @@ module Reaper
     module Deb
 
       SIGN_COMMAND = File.join(
-        File.expand_path(File.dirname(__FILE__), '..'),
+        File.expand_path(File.join(File.dirname(__FILE__), '..')),
         'util-scripts/auto-debsigs'
       )
 
@@ -13,7 +13,7 @@ module Reaper
           shellout(
             "#{SIGN_COMMAND} #{sign_type} #{key_id} #{pkgs.join(' ')}",
             :environment => {
-              'REAPER_KEY_PASSWORD' => key_pass
+              'REAPER_KEY_PASSWORD' => key_password
             }
           )
         end
