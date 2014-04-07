@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'mixlib-cli'
   s.add_dependency 'hashie'
   s.add_dependency 'multi_json'
+  s.add_dependency 'mixlib-shellout'
   s.executables << 'reaper'
   s.files = Dir['**/*']
 end
