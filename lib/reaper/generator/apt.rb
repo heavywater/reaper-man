@@ -1,11 +1,19 @@
+require 'reaper'
+
 module Reaper
   class Generator
+    # Generator methods for apt
     module Apt
 
+      # Generate the repository
       def generate!
         generate_dists(package_config[:apt])
       end
 
+      # Generate the repository dists
+      #
+      # @param pkg_hash [Hash] repository description
+      # @return [TrueClass]
       def generate_dists(pkg_hash)
         pkg_hash.each do |origin_name, dists|
           dists.each do |dist_name, dist_args|
@@ -33,8 +41,13 @@ module Reaper
             end
           end
         end
+        true
       end
 
+      # Sign file if configured for signing
+      #
+      # @yield block returning file path
+      # @return [String] file path
       def sign_file_if_setup
         path = yield
         if(signer && options[:sign])
@@ -43,6 +56,10 @@ module Reaper
         path
       end
 
+      # Create Packages file
+      #
+      # @param args [String] argument list for file path
+      # @return [String] path to compressed Packages file
       def package_file(*args)
         pkgs = args.pop
         args.insert(1, 'dists')
@@ -61,19 +78,10 @@ module Reaper
         compress_file(*args)
       end
 
-      def compress_file(*path)
-        compressed_path = path.dup
-        compressed_path.push("#{compressed_path.pop}.gz")
-        base_file = File.open(for_file(path))
-        create_file(compressed_path) do |file|
-          compressor = Zlib::GzipWriter.new(file)
-          while(data = base_file.read(2048))
-            compressor.write(data)
-          end
-          compressor.close
-        end
-      end
-
+      # Create Release file
+      #
+      # @param args [String] argument list for file path
+      # @return [TrueClass]
       def release_file(*args)
         header = args.detect{|a| a.is_a?(Hash)}
         header ? args.delete(header) : header = Rash.new
@@ -100,9 +108,9 @@ module Reaper
               end
             end
           end
+          true
         end
       end
-
 
     end
   end

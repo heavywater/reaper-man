@@ -1,3 +1,5 @@
+require 'reaper'
+
 module Reaper
   module Utils
     module Process

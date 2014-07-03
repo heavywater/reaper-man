@@ -2,8 +2,11 @@ require 'time'
 
 module Reaper
   class Generator
+    # Generator methods for rubygems
     module Rubygems
 
+      # Generate the rubygems repository
+      #
       def generate!
         generate_gemstore(package_config[:rubygem])
       end
@@ -71,6 +74,10 @@ module Reaper
         end
       end
 
+      # Sign file if configured for signing
+      #
+      # @yield block returning file path
+      # @return [String] file path
       def sign_file_if_setup
         path = yield
         if(signer && options[:sign])

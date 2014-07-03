@@ -10,11 +10,16 @@ from the `JSON` registry. Repository generation will result in skeleton reposito
 with the proper `Release` and `Packages` files. Package paths will be not exist
 within the generated repository. Resolving that issue is left to the reader.
 
-
 ### Support
 
-* Currently: `deb/apt`
-* In progress: `rpm/yum`
+#### Enabled
+
+* deb/apt
+* gem/rubygems
+
+#### In Progress
+
+* rpm/yum
 
 ### Usage
 

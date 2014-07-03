@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'hashie', git: 'git://github.com/intridea/hashie.git'
+gem 'hashie'
+gem 'minitest'
 
 gemspec

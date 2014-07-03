@@ -1,6 +1,12 @@
+require 'reaper'
+
 module Reaper
+  # Standard error for reaper errors
   class Error < StandardError
+    # exit code for exception
     CODE = -1
+
+    # @return [Integer]
     def exit_code
       self.class.const_get(:CODE)
     end

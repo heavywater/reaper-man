@@ -1,7 +1,10 @@
 require 'mixlib/cli'
 require 'stringio'
 
+require 'reaper'
+
 module Reaper
+  # Command line interface
   class Cli
 
     autoload :Repo, 'reaper/cli/repo'
@@ -13,13 +16,17 @@ module Reaper
     banner 'reaper (package|repo|sign)'
 
     class << self
-      # make options fall through
+
+      # Allow options to fall into subclasses
+      #
+      # @param klass [Class]
       def inherited(klass)
         klass.send(:include, Mixlib::CLI)
         self.options.each do |args|
           klass.option(*args)
         end
       end
+
     end
 
     option(:configuration,
@@ -54,6 +61,7 @@ module Reaper
       :description => 'Path to JSON packages file'
     )
 
+    # Mapping for CLI class to load
     CLI_MAP = {
       :repo => Repo,
       :package => Package,
@@ -61,12 +69,17 @@ module Reaper
     }
 
     class << self
+
+      # Initialize the CLI instance
+      #
+      # @return [Cli]
       def init!
         obj = new
         obj.config = Config.new(obj.config)
         obj
       end
 
+      # Process the provided command
       def process!
         orig_out = $stdout
         obj = nil
@@ -90,16 +103,26 @@ module Reaper
 
     end
 
+    # @return [Array<Symbol>] callable actions
     def actions
       self.class.instance_methods(false)
     end
 
+    # Perform action with custom message
+    #
+    # @param doing [String] message of action in progress
+    # @yield block to execute wrapped in message
+    # @return [Object] result of block
     def action(doing)
       print "#{doing}... "
-      yield
+      result = yield
       puts "done!"
+      result
     end
 
+    # Output help text
+    #
+    # @return [TrueClass]
     def help
       opt_to_desc = self.class.options.values.map{|x|(x[:long] || x[:short]).length}.max + 2
       puts "Usage: #{self.class.banner} (options)"
@@ -112,8 +135,13 @@ module Reaper
         ].compact.join(' ')
         puts "\t#{str}"
       end
+      true
     end
 
+    # Load JSON from file
+    #
+    # @param path [String] JSON file path
+    # @return [Rash]
     def load_json(path)
       if(File.exist?(path.to_s))
         MultiJson.load(File.read(path)).to_rash
@@ -122,6 +150,7 @@ module Reaper
       end
     end
 
+    # @return [Signer] configuration based signer instance
     def signer
       Signer.new(
         :key_id => config[:signing_key],

@@ -1,5 +1,6 @@
+require 'reaper'
+
 module Reaper
-  class Version < Gem::Version
-  end
+  # current library version
   VERSION = Version.new('0.1.0')
 end

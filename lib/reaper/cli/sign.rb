@@ -1,5 +1,8 @@
+require 'reaper'
+
 module Reaper
   class Cli
+    # CLI helpers for signing interactions
     class Sign < Cli
 
       banner 'reaper sign (package|packages) (PACKAGE_FILE|PACKAGES_DIRECTORY)'
@@ -12,14 +15,21 @@ module Reaper
       )
       options[:package_system][:required] = true
 
+      # Sign a package
+      #
+      # @return [TrueClass]
       def package
         package = parse_options[2]
         signer = Signer.new({:package_system => File.extname(package).tr('.', '')}.merge(config))
         action "Signing package #{package}" do
           signer.package(package)
         end
+        true
       end
 
+      # Sign packages
+      #
+      # @return [TrueClass]
       def packages
         pkg_dir = parse_options.first
         signer = Signer.new(config)
@@ -28,6 +38,7 @@ module Reaper
           contents.delete_if{|c| !File.file?(c)}
           signer.package(*contents)
         end
+        true
       end
 
     end

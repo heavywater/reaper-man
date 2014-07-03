@@ -1,3 +1,5 @@
+require 'reaper'
+
 module Reaper
   class Signer
     module Rubygems

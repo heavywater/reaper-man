@@ -1,5 +1,7 @@
-module Reaper
+require 'reaper'
 
+module Reaper
+  # File signer
   class Signer
 
     autoload :Rpm, 'reaper/signer/rpm'
@@ -8,8 +10,20 @@ module Reaper
 
     include Utils::Process
 
-    attr_reader :key_id, :sign_chunk_size, :sign_type, :package_system, :key_password
+    attr_reader :key_id
+    attr_reader :sign_chunk_size
+    attr_reader :sign_type
+    attr_reader :package_system
+    attr_reader :key_password
 
+    # Create new instance
+    #
+    # @param args [Hash]
+    # @option args [String] :signing_key
+    # @option args [String] :signing_chunk_size (defaults to 1)
+    # @option args [String] :signing_type (defaults to 'origin')
+    # @option args [String] :key_password (defaults to `ENV['REAPER_KEY_PASSWORD']`)
+    # @option args [String] :package_system
     def initialize(args={})
       args = args.to_rash
       @key_id = args[:signing_key]
@@ -29,12 +43,18 @@ module Reaper
       end
     end
 
+    # Sign the file
+    #
+    # @param src [String] path to source file
+    # @param dst [String] path for destination file
+    # @return [String] destination file path
     def file(src, dst=nil)
       opts = ['--detach-sign', '--armor']
       dst ||= src.sub(/#{Regexp.escape(File.extname(src))}$/, '.gpg')
       opts << "--output '#{dst}'"
       cmd = (['gpg'] + opts + [src]).join(' ')
       shellout!(cmd)
+      dst
     end
 
   end

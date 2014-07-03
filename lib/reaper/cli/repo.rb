@@ -1,8 +1,11 @@
+require 'reaper'
+
 module Reaper
   class Cli
+    # CLI helpers for repo interactions
     class Repo < Cli
 
-      banner 'reaper package (create|update)'
+      banner 'reaper repo (create|update)'
 
       option(:output_directory,
         :short => '-o DIRECTORY',
@@ -14,6 +17,9 @@ module Reaper
       options[:package_system][:required] = true
       options[:packages_file][:required] = true
 
+      # Generate the repository
+      #
+      # @return [TrueClass]
       def create
         parse_options
         action "Generating repository" do
@@ -25,6 +31,7 @@ module Reaper
             ).to_rash
           ).generate!
         end
+        true
       end
       alias_method :update, :create
 
