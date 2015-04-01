@@ -2,6 +2,7 @@ require 'reaper'
 
 module Reaper
   module Utils
+    # Shellout helper
     module Process
 
       # NOTE: This is extracted from the elecksee gem and some
