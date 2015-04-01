@@ -6,11 +6,11 @@ Gem::Specification.new do |s|
   s.summary = 'Reaper repository generator'
   s.author = 'Chris Roberts'
   s.email = 'code@chrisroberts.org'
-  s.homepage = 'http://github.com/heavywater/reaper'
+  s.homepage = 'http://github.com/hw-labs/reaper'
   s.description = 'Reaper repository generator'
   s.require_path = 'lib'
   s.add_dependency 'bogo-cli'
   s.add_dependency 'childprocess'
   s.executables << 'reaper'
-  s.files = Dir['**/*']
+  s.files = Dir['lib/**/*'] + %w(reaper.gemspec README.md CHANGELOG.md CONTRIBUTING.md LICENSE)
 end
