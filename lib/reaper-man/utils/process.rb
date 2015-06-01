@@ -1,4 +1,7 @@
 require 'reaper-man'
+require 'childprocess'
+require 'shellwords'
+require 'tempfile'
 
 module ReaperMan
   module Utils
@@ -52,15 +55,14 @@ module ReaperMan
       # Simple helper to shell out
       def shellout(cmd, args={})
         result = nil
-        if(defined?(ChildProcess))
-          cmd_type = :childprocess
-        else
+        if(defined?(Mixlib))
           cmd_type = :mixlib_shellout
+        else
+          cmd_type = :childprocess
         end
         com_block = nil
         case cmd_type
         when :childprocess
-          require 'tempfile'
           com_block = lambda{ child_process_command(cmd, args) }
         when :mixlib_shellout
           require 'mixlib/shellout'
