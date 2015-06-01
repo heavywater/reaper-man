@@ -1,6 +1,6 @@
-require 'time'
+require 'reaper-man'
 
-module Reaper
+module ReaperMan
   class Generator
     # Generator methods for rubygems
     module Rubygems

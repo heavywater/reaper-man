@@ -1,6 +1,6 @@
-require 'reaper'
+require 'reaper-man'
 
-module Reaper
+module ReaperMan
   module Utils
     # Shellout helper
     module Process

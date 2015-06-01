@@ -1,6 +1,7 @@
+require 'reaper-man'
 require 'rubygems/package'
 
-module Reaper
+module ReaperMan
   class PackageList
     class Processor
       class Gem < Processor
@@ -38,7 +39,7 @@ module Reaper
         # @return [Hash]
         def extract_fields(package)
           spec = ::Gem::Package.open(File.open(package)){|pack| pack.metadata}
-          fields = Rash[
+          fields = Smash[
             spec.to_yaml_properties.map do |var_name|
               [var_name.to_s.tr('@', ''), spec.instance_variable_get(var_name)]
             end

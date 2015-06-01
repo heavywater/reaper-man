@@ -1,12 +1,12 @@
-require 'reaper'
+require 'reaper-man'
 
-module Reaper
+module ReaperMan
   # File signer
   class Signer
 
-    autoload :Rpm, 'reaper/signer/rpm'
-    autoload :Deb, 'reaper/signer/deb'
-    autoload :Rubygems, 'reaper/signer/rubygems'
+    autoload :Rpm, 'reaper-man/signer/rpm'
+    autoload :Deb, 'reaper-man/signer/deb'
+    autoload :Rubygems, 'reaper-man/signer/rubygems'
 
     include Utils::Process
 
@@ -25,7 +25,7 @@ module Reaper
     # @option args [String] :key_password (defaults to `ENV['REAPER_KEY_PASSWORD']`)
     # @option args [String] :package_system
     def initialize(args={})
-      args = args.to_rash
+      args = args.to_smash
       @key_id = args[:signing_key]
       @sign_chunk_size = args.fetch(:signing_chunk_size, 1)
       @sign_type = args.fetch(:signing_type, 'origin')

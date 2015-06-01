@@ -1,16 +1,16 @@
 require 'multi_json'
 
-module Reaper
-  autoload :Cli, 'reaper/cli'
-  autoload :Config, 'reaper/config'
-  autoload :Error, 'reaper/error'
-  autoload :Generator, 'reaper/generator'
-  autoload :PackageList, 'reaper/package_list'
-  autoload :Rash, 'reaper/rash'
-  autoload :Runner, 'reaper/runner'
-  autoload :Signer, 'reaper/signer'
-  autoload :Version, 'reaper/version'
-  autoload :Utils, 'reaper/utils'
+module ReaperMan
+  autoload :Cli, 'reaper-man/cli'
+  autoload :Config, 'reaper-man/config'
+  autoload :Error, 'reaper-man/error'
+  autoload :Generator, 'reaper-man/generator'
+  autoload :PackageList, 'reaper-man/package_list'
+  autoload :Rash, 'reaper-man/rash'
+  autoload :Runner, 'reaper-man/runner'
+  autoload :Signer, 'reaper-man/signer'
+  autoload :Version, 'reaper-man/version'
+  autoload :Utils, 'reaper-man/utils'
 end
 
-require 'reaper/rash'
+require 'reaper-man/rash'

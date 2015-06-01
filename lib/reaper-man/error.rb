@@ -1,6 +1,6 @@
-require 'reaper'
+require 'reaper-man'
 
-module Reaper
+module ReaperMan
   # Standard error for reaper errors
   class Error < StandardError
     # exit code for exception

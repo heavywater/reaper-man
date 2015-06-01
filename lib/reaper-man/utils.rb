@@ -2,13 +2,13 @@ require 'digest/sha1'
 require 'digest/sha2'
 require 'digest/md5'
 
-require 'reaper'
+require 'reaper-man'
 
-module Reaper
+module ReaperMan
   # Helper utilities
   module Utils
 
-    autoload :Process, 'reaper/utils/process'
+    autoload :Process, 'reaper-man/utils/process'
 
     # Checksum helper
     module Checksum

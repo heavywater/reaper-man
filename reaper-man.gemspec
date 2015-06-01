@@ -1,16 +1,16 @@
 $LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__)) + '/lib/'
-require 'reaper/version'
+require 'reaper-man/version'
 Gem::Specification.new do |s|
-  s.name = 'reaper'
-  s.version = Reaper::VERSION.version
-  s.summary = 'Reaper repository generator'
+  s.name = 'reaper-man'
+  s.version = ReaperMan::VERSION.version
+  s.summary = 'Reap packages'
   s.author = 'Chris Roberts'
   s.email = 'code@chrisroberts.org'
   s.homepage = 'http://github.com/hw-labs/reaper'
-  s.description = 'Reaper repository generator'
+  s.description = 'Grow code, reap packages'
   s.require_path = 'lib'
   s.add_dependency 'bogo-cli'
   s.add_dependency 'childprocess'
-  s.executables << 'reaper'
-  s.files = Dir['lib/**/*'] + %w(reaper.gemspec README.md CHANGELOG.md CONTRIBUTING.md LICENSE)
+  s.executables << 'reaper-man'
+  s.files = Dir['lib/**/*'] + %w(reaper-man.gemspec README.md CHANGELOG.md CONTRIBUTING.md LICENSE)
 end

@@ -12,11 +12,11 @@ Bogo::Cli::Setup.define do
 
   common_options = lambda do
     on :c, :config=, 'Path to configuration file'
-    on :k, :signing_key=, 'Path to key for signing generated files'
-    on :t, :signing_type=, 'Signing type name'
+    on :k, :'signing-key=', 'Path to key for signing generated files'
+    on :t, :'signing-type=', 'Signing type name'
     on :s, :sign, 'Enable file signing'
-    on :S, :packaging_system=, 'Packaging system to generate repository (apt/yum/rubygems/supermarket)'
-    on :p, :packages_file=, 'Path to packages file', :required => true
+    on :S, :'package-system=', 'Packaging system to generate repository (apt/yum/rubygems/supermarket)'
+    on :p, :'packages-file=', 'Path to packages file', :required => true
   end
 
   command :repo do
@@ -39,32 +39,37 @@ Bogo::Cli::Setup.define do
 
   command :package do
 
+    on :O, :origin=, 'Name of repository origin', :default => 'Default'
+    on :N, :codename=, 'Code name to add package', :default => 'all'
+    on :C, :component=, 'Component name to add package', :default => 'main'
+
     command :add do
+      description 'Add package to repository manifest'
+
+      run do |opts, args|
+        ReaperMan::Command::Package::Add.new(opts, args).execute!
+      end
     end
 
     command :remove do
+      description 'Remove package from repository manifest'
+
+      run do |opts, args|
+        ReaperMan::Command::Package::Remove.new(opts, args).execute!
+      end
     end
 
   end
 
   command :sign do
+    description 'Sign package(s)'
+
+    on :S, :'package-system=', 'Packaging system to generate repository (apt/yum/rubygems/supermarket)', :required => true
+    on :Z, :'signing-chunk-size=', 'Number of packages to sign at once', :default => 20, :as => Integer
+
+    run do |opts, args|
+      ReaperMan::Command::Sign.new(opts, args).execute!
+    end
   end
 
-  end
-end
-
-begin
-  Reaper::Cli.process!
-rescue Reaper::Error => e
-  $stderr.puts "ERROR: #{e.message}"
-  if(ENV['DEBUG'])
-    $stderr.puts "#{e.class}: #{e}\n#{e.backtrace.join("\n")}"
-  end
-  exit e.exit_code
-rescue => e
-  $stderr.puts "ERROR (unexpected): #{e.message}"
-  if(ENV['DEBUG'])
-    $stderr.puts "#{e.class}: #{e}\n#{e.backtrace.join("\n")}"
-  end
-  exit -2
 end

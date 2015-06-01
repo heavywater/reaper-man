@@ -1,4 +1,6 @@
-module Reaper
+require 'reaper-man'
+
+module ReaperMan
   class PackageList
     class Processor
       class Rpm < Processor

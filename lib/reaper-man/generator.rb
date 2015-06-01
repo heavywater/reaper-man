@@ -1,25 +1,26 @@
+require 'time'
 require 'zlib'
 require 'fileutils'
 
-require 'reaper'
+require 'reaper-man'
 
-module Reaper
+module ReaperMan
   # Repository generator
   class Generator
 
-    autoload :Apt, 'reaper/generator/apt'
-    autoload :Rpm, 'reaper/generator/rpm'
-    autoload :Rubygems, 'reaper/generator/rubygems'
+    autoload :Apt, 'reaper-man/generator/apt'
+    autoload :Rpm, 'reaper-man/generator/rpm'
+    autoload :Rubygems, 'reaper-man/generator/rubygems'
 
     include Utils::Checksum
 
     # @return [String]
     attr_reader :package_system
-    # @return [Rash]
+    # @return [Hash]
     attr_reader :package_config
     # @return [Signer, NilClass]
     attr_reader :signer
-    # @return [Rash]
+    # @return [Hash]
     attr_reader :options
 
     # Create new instance
@@ -29,11 +30,10 @@ module Reaper
     # @option args [Hash] :package_config
     # @option args [Signer] :signer
     def initialize(args={})
-      args = args.dup
-      @package_system = args.delete(:package_system)
-      @package_config = (args.delete(:package_config) || {}).to_rash
-      @signer = args.delete(:signer)
-      @options = args.to_rash
+      @package_system = args[:package_system]
+      @package_config = args.fetch(:package_config, Smash.new)
+      @signer = args[:signer]
+      @options = args
       extend self.class.const_get(package_system.to_s.split('_').map(&:capitalize).join.to_sym)
     end
 

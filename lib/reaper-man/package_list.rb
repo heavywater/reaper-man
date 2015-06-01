@@ -1,14 +1,14 @@
 require 'multi_json'
-require 'reaper'
+require 'reaper-man'
 
-module Reaper
+module ReaperMan
   # Package list for repository
   class PackageList
     # Package list modification processor
     class Processor
-      autoload :Rpm, 'reaper/package_list/rpm'
-      autoload :Deb, 'reaper/package_list/deb'
-      autoload :Gem, 'reaper/package_list/gem'
+      autoload :Rpm, 'reaper-man/package_list/rpm'
+      autoload :Deb, 'reaper-man/package_list/deb'
+      autoload :Gem, 'reaper-man/package_list/gem'
 
       include Utils::Process
       include Utils::Checksum
@@ -47,7 +47,7 @@ module Reaper
     def initialize(path, args={})
       @path = path
       @options = args.dup
-      @content = Rash.new
+      @content = Smash.new
       init_list!
     end
 

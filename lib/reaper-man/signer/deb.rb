@@ -1,6 +1,6 @@
-require 'reaper'
+require 'reaper-man'
 
-module Reaper
+module ReaperMan
   class Signer
     # Signing methods for deb files
     module Deb

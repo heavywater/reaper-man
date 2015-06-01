@@ -1,6 +1,6 @@
-require 'reaper'
+require 'reaper-man'
 
-module Reaper
+module ReaperMan
   class PackageList
     class Processor
       # Package list process for debian packages
@@ -64,12 +64,12 @@ module Reaper
         # @param package_name [String] name
         # @param version [String]
         def remove(hash, package_name, version, args={})
-          hash = hash.to_rash
+          hash = hash.to_smash
           arch = [args.fetch(:arch, all_map)].flatten.compact
           deleted = false
           arch.each do |arch_name|
             arch_name = "binary-#{arch_name}"
-            if(hash.retrieve(:apt, origin, dist, :components, component, arch_name, package_name))
+            if(hash.get(:apt, origin, dist, :components, component, arch_name, package_name))
               if(version)
                 deleted = hash[:apt][origin][dist][:components][component][arch_name][package_name].delete(version)
               else
@@ -86,7 +86,7 @@ module Reaper
         # @return [Hash]
         def extract_fields(package)
           content = shellout("dpkg-deb -f '#{package}'")
-          Rash[content.stdout.scan(/([^\s][^:]+):\s+(([^\n]|\n\s)+)/).map{|a| a.slice(0,2)}]
+          Smash[content.stdout.scan(/([^\s][^:]+):\s+(([^\n]|\n\s)+)/).map{|a| a.slice(0,2)}]
         end
 
         # Insert package information into package list

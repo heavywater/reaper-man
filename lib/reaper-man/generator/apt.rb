@@ -1,6 +1,6 @@
-require 'reaper'
+require 'reaper-man'
 
-module Reaper
+module ReaperMan
   class Generator
     # Generator methods for apt
     module Apt
@@ -20,7 +20,7 @@ module Reaper
             dist_args[:components].each do |component_name, arches|
               arches.each do |arch_name, packages|
                 package_file(origin_name, dist_name, component_name, arch_name, packages)
-                release_headers = Rash.new
+                release_headers = Smash.new
                 release_headers['Label'] = dist_args['label']
                 release_headers['Archive'] = dist_name
                 sign_file_if_setup do
@@ -28,7 +28,7 @@ module Reaper
                 end
               end
             end
-            release_headers = Rash[
+            release_headers = Smash[
               %w(Codename Suite Label Description Version).map do |field_name|
                 if(val = dist_args[field_name.downcase])
                   [field_name, val]
@@ -84,8 +84,8 @@ module Reaper
       # @return [TrueClass]
       def release_file(*args)
         header = args.detect{|a| a.is_a?(Hash)}
-        header ? args.delete(header) : header = Rash.new
-        header.merge(Rash[%w(Origin Codename Component Architecture).zip(args)])
+        header ? args.delete(header) : header = Smash.new
+        header.merge(Smash[%w(Origin Codename Component Architecture).zip(args)])
         header['Date'] = Time.now.utc.strftime('%a, %d %b %Y %H:%M:%S %Z')
         args.insert(1, 'dists')
         create_file(*args.dup.push('Release')) do |file|
