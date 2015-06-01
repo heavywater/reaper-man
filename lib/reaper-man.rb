@@ -2,6 +2,7 @@ require 'multi_json'
 
 module ReaperMan
   autoload :Cli, 'reaper-man/cli'
+  autoload :Command, 'reaper-man/command'
   autoload :Config, 'reaper-man/config'
   autoload :Error, 'reaper-man/error'
   autoload :Generator, 'reaper-man/generator'
