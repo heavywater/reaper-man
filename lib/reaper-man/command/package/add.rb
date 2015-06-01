@@ -9,7 +9,7 @@ module ReaperMan
         def execute!
           arguments.each do |path|
             run_action "Adding package to repository manifest: #{path}" do
-              list = ReaperMan::PackageList.new(options[:packages_file], options)
+              list = ReaperMan::PackageList.new(config[:packages_file], config)
               list.add_package(path)
               list.write!
               nil

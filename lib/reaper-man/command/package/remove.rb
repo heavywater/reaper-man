@@ -9,7 +9,7 @@ module ReaperMan
         def execute!
           arguments.each do |pkg|
             run_action "Remove package from repository manifest: #{pkg}" do
-              list = ReaperMan::PackageList.new(options[:packages_file], options)
+              list = ReaperMan::PackageList.new(config[:packages_file], config)
               list.remove_package(pkg)
               list.write!
               nil
