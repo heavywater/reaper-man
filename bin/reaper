@@ -1,6 +1,57 @@
 #!/usr/bin/env ruby
 
-require 'reaper'
+require 'bogo-cli'
+require 'reaper-man'
+
+Bogo::Cli::Setup.define do
+
+  on :v, :version, 'Print version' do
+    puts "reaper-man - Repository generation tool - [Version: #{ReaperMan::VERSION}]"
+    exit
+  end
+
+  common_options = lambda do
+    on :c, :config=, 'Path to configuration file'
+    on :k, :signing_key=, 'Path to key for signing generated files'
+    on :t, :signing_type=, 'Signing type name'
+    on :s, :sign, 'Enable file signing'
+    on :S, :packaging_system=, 'Packaging system to generate repository (apt/yum/rubygems/supermarket)'
+    on :p, :packages_file=, 'Path to packages file', :required => true
+  end
+
+  command :repo do
+
+    repo_options = lambda do
+      on :o, :output_directory=, 'Path to output repository structure', :required => true
+    end
+
+    command :generate do
+      instance_exec(&common_options)
+      instance_exec(&repo_options)
+      description 'Generate repository'
+
+      run do |opts, args|
+        ReaperMan::Command::Repository::Generate.new(opts, args).execute!
+      end
+    end
+
+  end
+
+  command :package do
+
+    command :add do
+    end
+
+    command :remove do
+    end
+
+  end
+
+  command :sign do
+  end
+
+  end
+end
 
 begin
   Reaper::Cli.process!
