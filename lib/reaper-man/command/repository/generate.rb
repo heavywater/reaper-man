@@ -8,7 +8,7 @@ module ReaperMan
 
         def execute!
           run_action 'Generating repository' do
-            ReaperMan::Generator.new(opts).generate!
+            ReaperMan::Generator.new(options).generate!
             nil
           end
         end

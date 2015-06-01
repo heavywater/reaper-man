@@ -6,8 +6,8 @@ module ReaperMan
 
       def execute!
         run_action 'Signing file(s)' do
-          signer = Signer.new(opts)
-          files = Dir.glob(File.join(args.first, '**', '*'))
+          signer = Signer.new(options)
+          files = Dir.glob(File.join(arguments.first, '**', '*'))
           files.delete_if do |path|
             !File.file?(path)
           end
