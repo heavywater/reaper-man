@@ -20,6 +20,7 @@ Bogo::Cli::Setup.define do
   end
 
   command :repo do
+    description 'Package repository generation'
 
     repo_options = lambda do
       on :o, :output_directory=, 'Path to output repository structure', :required => true
@@ -38,13 +39,18 @@ Bogo::Cli::Setup.define do
   end
 
   command :package do
+    description 'Update packages within repositories'
 
-    on :O, :origin=, 'Name of repository origin', :default => 'Default'
-    on :N, :codename=, 'Code name to add package', :default => 'all'
-    on :C, :component=, 'Component name to add package', :default => 'main'
+    package_options = lambda do
+      on :O, :origin=, 'Name of repository origin', :default => 'Default'
+      on :N, :codename=, 'Code name to add package', :default => 'all'
+      on :C, :component=, 'Component name to add package', :default => 'main'
+    end
 
     command :add do
       description 'Add package to repository manifest'
+      instance_exec(&common_options)
+      instance_exec(&package_options)
 
       run do |opts, args|
         ReaperMan::Command::Package::Add.new(opts, args).execute!
@@ -53,6 +59,8 @@ Bogo::Cli::Setup.define do
 
     command :remove do
       description 'Remove package from repository manifest'
+      instance_exec(&common_options)
+      instance_exec(&package_options)
 
       run do |opts, args|
         ReaperMan::Command::Package::Remove.new(opts, args).execute!
