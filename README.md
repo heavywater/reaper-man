@@ -1,4 +1,4 @@
-## Reaper
+## Reaper Man
 #### "What can the harvest hope for, if not for the care of the Reaper Man?"
 
 Grow code, harvest packages
@@ -26,29 +26,29 @@ within the generated repository. Resolving that issue is left to the reader.
 #### Add package to registry
 
 ```
-> reaper package add my_pkg.deb --packages-file registry.json
+> reaper-man package add my_pkg.deb --packages-file registry.json
 ```
 
 ### Remove package from registry
 
 ```
-> reaper package remove my_pkg --packages-file registry.json
+> reaper-man package remove my_pkg --packages-file registry.json
 ```
 
 or remove a specific version
 
 ```
-> reaper package remove my_pkg 1.0.0 --packages-file registry.json
+> reaper-man package remove my_pkg 1.0.0 --packages-file registry.json
 ```
 
 ### Create a repository
 
 ```
-> reaper repo create --packages-file registry.json --package-system apt --output-directory /tmp/test-repo
+> reaper-man repo create --packages-file registry.json --package-system apt --output-directory /tmp/test-repo
 ```
 
 This can also be used to update an existing repository structure.
 
 ## Infos
-* Repository: https://github.com/heavywater/reaper
+* Repository: https://github.com/hw-labs/reaper-man
 * IRC: Freenode @ #heavywater
