@@ -8,7 +8,15 @@ module ReaperMan
 
         def execute!
           run_action 'Generating repository' do
-            ReaperMan::Generator.new(options).generate!
+            ReaperMan::Generator.new(
+              config.merge(
+                Smash.new(
+                  :package_config => MultiJson.load(
+                    File.read(config[:packages_file])
+                  ).to_smash
+                )
+              )
+            ).generate!
             nil
           end
         end
