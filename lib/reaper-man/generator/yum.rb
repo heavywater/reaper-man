@@ -3,7 +3,7 @@ require 'time'
 
 module ReaperMan
   class Generator
-    # Generator methods for rubygems
+    # Generator methods for yum
     module Yum
     end
   end
