@@ -53,9 +53,9 @@ module ReaperMan
 
     # Add package to package list file
     #
-    # @param package [String] path to package file
+    # @param package [Array<String>] path to package file
     def add_package(package)
-      package_handler(File.extname(package).tr('.', '')).add(content, package)
+      [package_handler(File.extname(package).tr('.', '')).add(content, package)].flatten.compact
     end
 
     # Remove package from the package list file
