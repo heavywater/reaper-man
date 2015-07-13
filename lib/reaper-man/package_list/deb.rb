@@ -126,7 +126,7 @@ module ReaperMan
                 }
               }
             )
-            File.join('apt', origin, package_file_name)
+            package_file_name
           end
         end
 
