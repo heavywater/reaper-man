@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.summary = 'Reap packages'
   s.author = 'Chris Roberts'
   s.email = 'code@chrisroberts.org'
-  s.homepage = 'https://github.com/hw-labs/reaper'
+  s.homepage = 'https://github.com/hw-labs/reaper-man'
   s.description = 'Grow code, reap packages'
   s.require_path = 'lib'
   s.add_runtime_dependency 'bogo-cli'
