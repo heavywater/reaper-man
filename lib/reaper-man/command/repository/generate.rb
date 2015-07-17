@@ -13,7 +13,8 @@ module ReaperMan
                 Smash.new(
                   :package_config => MultiJson.load(
                     File.read(config[:packages_file])
-                  ).to_smash
+                  ).to_smash,
+                  :signer => config[:sign] ? Signer.new(config) : nil
                 )
               )
             ).generate!
