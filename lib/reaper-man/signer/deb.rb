@@ -26,7 +26,7 @@ module ReaperMan
               }
             )
           else
-            shellout(%w(debsigs --sign="#{sign_type}" --default-key="#{key_id}" #{pkgs.join(' ')}))
+            shellout(%(debsigs --sign="#{sign_type}" --default-key="#{key_id}" #{pkgs.join(' ')}))
           end
         end
         true
