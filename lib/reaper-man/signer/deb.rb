@@ -5,12 +5,6 @@ module ReaperMan
     # Signing methods for deb files
     module Deb
 
-      # command to use for file signing
-      SIGN_COMMAND = File.join(
-        File.expand_path(File.join(File.dirname(__FILE__), '..')),
-        'util-scripts/auto-debsigs'
-      )
-
       # Sign given files
       #
       # @param pkgs [String] list of file paths
@@ -18,15 +12,16 @@ module ReaperMan
       def package(*pkgs)
         pkgs = valid_packages(*pkgs)
         pkgs.each_slice(sign_chunk_size) do |pkgs|
+          cmd = %(debsigs --sign="#{sign_type}" --default-key="#{key_id}" #{pkgs.join(' ')})
           if(key_password)
             shellout(
-              "#{SIGN_COMMAND} #{sign_type} #{key_id} #{pkgs.join(' ')}",
+              "#{Signer::HELPER_COMMAND} #{cmd}",
               :environment => {
                 'REAPER_KEY_PASSWORD' => key_password
               }
             )
           else
-            shellout(%(debsigs --sign="#{sign_type}" --default-key="#{key_id}" #{pkgs.join(' ')}))
+            shellout(cmd)
           end
         end
         true
