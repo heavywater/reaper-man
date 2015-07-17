@@ -52,6 +52,14 @@ or remove a specific version
 
 This can also be used to update an existing repository structure.
 
+### Dependencies
+
+Commands that must be available within the path:
+
+* `gpg`
+* `debsigs`
+* `expect`
+
 ## Infos
 * Repository: https://github.com/hw-labs/reaper-man
 * IRC: Freenode @ #heavywater
