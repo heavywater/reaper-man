@@ -6,10 +6,12 @@ Grow code, harvest packages
 
 ### Harvests
 
-Package repository is maintained via `JSON` file. Packages are added or removed
-from the `JSON` registry. Repository generation will result in skeleton repository
-with the proper `Release` and `Packages` files. Package paths will be not exist
-within the generated repository. Resolving that issue is left to the reader.
+Reaper man generates a `JSON` registry that describes one or more package repositories
+that can be used to generate the expected repository file system. Packages are added
+or removed from the registry, and regeneration of the repository file system is fast
+and simple. The generated repository file system will refer to the referenced packages
+but will not actually contain the referenced packages. Storage of the actual package
+assets (and the delivery of said assets) is left to the reader.
 
 ### Support
 
