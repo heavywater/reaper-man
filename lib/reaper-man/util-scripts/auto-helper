@@ -4,14 +4,12 @@ log_user 0
 
 set timeout 3
 
-set signtype [lindex $argv 0]
-set signkey [lindex $argv 1]
-set package [join [lrange $argv 2 [llength $argv]] " "]
+set commandstring [join [lrange $argv 0 [llength $argv]] " "]
 
 spawn /bin/bash
 expect {
   -re ".*\$ *$" {
-    send "/usr/bin/debsigs --sign=\"$signtype\" --default-key=\"$signkey\" $package\r"
+    send "$commandstring\r"
   }
   timeout { exit 1 }
 }
