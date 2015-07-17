@@ -16,6 +16,12 @@ module ReaperMan
     attr_reader :package_system
     attr_reader :key_password
 
+    # command to use for file signing
+    HELPER_COMMAND = File.join(
+      File.expand_path(File.dirname(__FILE__)),
+      'util-scripts/auto-helper'
+    )
+
     # Create new instance
     #
     # @param args [Hash]
@@ -48,12 +54,21 @@ module ReaperMan
     # @param src [String] path to source file
     # @param dst [String] path for destination file
     # @return [String] destination file path
-    def file(src, dst=nil)
-      opts = ['--detach-sign', '--armor']
+    def file(src, dst=nil, sign_opts=nil)
+      opts = sign_opts ? [sign_opts].flatten.compact : ['--detach-sign', '--armor']
       dst ||= src.sub(/#{Regexp.escape(File.extname(src))}$/, '.gpg')
       opts << "--output '#{dst}'"
-      cmd = (['gpg'] + opts + [src]).join(' ')
-      shellout!(cmd)
+      cmd = (["gpg --default-key #{key_id}"] + opts + [src]).join(' ')
+      if(key_password)
+        shellout(
+          "#{HELPER_COMMAND} #{cmd}",
+          :environment => {
+            'REAPER_KEY_PASSWORD' => key_password
+          }
+        )
+      else
+        shellout(cmd)
+      end
       dst
     end
 
