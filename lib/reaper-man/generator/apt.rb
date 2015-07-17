@@ -36,6 +36,15 @@ module ReaperMan
               end.compact
             ]
             release_headers['Components'] = dist_args[:components].keys.join(' ')
+            signed = sign_file_if_setup('--clearsign') do
+              release_file(origin_name, dist_name, release_headers)
+            end
+            if(File.exists?("#{signed}.gpg"))
+              FileUtils.mv(
+                "#{signed}.gpg",
+                File.join(File.dirname(signed), 'InRelease')
+              )
+            end
             sign_file_if_setup do
               release_file(origin_name, dist_name, release_headers)
             end
@@ -48,10 +57,10 @@ module ReaperMan
       #
       # @yield block returning file path
       # @return [String] file path
-      def sign_file_if_setup
+      def sign_file_if_setup(opts=nil)
         path = yield
         if(signer && options[:sign])
-          signer.file(path)
+          signer.file(path, nil, opts)
         end
         path
       end
