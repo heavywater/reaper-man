@@ -71,7 +71,7 @@ Bogo::Cli::Setup.define do
 
   command :sign do
     description 'Sign package(s)'
-
+    instance_exec(&common_options)
     on :S, :'package-system=', 'Packaging system to generate repository (apt/yum/rubygems/supermarket)', :required => true
     on :Z, :'signing-chunk-size=', 'Number of packages to sign at once', :default => 20, :as => Integer
 
