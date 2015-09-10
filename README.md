@@ -19,9 +19,6 @@ assets (and the delivery of said assets) is left to the reader.
 
 * deb/apt
 * gem/rubygems
-
-#### In Progress
-
 * rpm/yum
 
 ### Usage
@@ -58,6 +55,9 @@ Commands that must be available within the path:
 
 * `gpg`
 * `debsigs`
+* `dpkg-deb`
+* `rpm`
+* `rpmsign`
 * `expect`
 
 ## Infos
