@@ -9,7 +9,7 @@ module ReaperMan
   class Generator
 
     autoload :Apt, 'reaper-man/generator/apt'
-    autoload :Rpm, 'reaper-man/generator/rpm'
+    autoload :Yum, 'reaper-man/generator/yum'
     autoload :Rubygems, 'reaper-man/generator/rubygems'
 
     include Utils::Checksum

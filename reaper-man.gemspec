@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.add_runtime_dependency 'bogo-cli'
   s.add_runtime_dependency 'childprocess'
+  s.add_runtime_dependency 'xml-simple'
   s.add_development_dependency 'minitest'
   s.executables << 'reaper-man'
   s.files = Dir['lib/**/*'] + %w(reaper-man.gemspec README.md CHANGELOG.md CONTRIBUTING.md LICENSE)
