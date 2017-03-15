@@ -56,6 +56,8 @@ module ReaperMan
             info.each do |var, value|
               if(spec.respond_to?("#{var}="))
                 begin
+                  # Ensure we convert Smash instances
+                  value = value.to_hash if value.is_a?(Hash)
                   spec.send("#{var}=", value)
                 rescue Gem::InvalidSpecificationException => e
                   # TODO: Do we have a logger in this project?
@@ -67,8 +69,10 @@ module ReaperMan
             info[:dependencies].each do |dep|
               spec.add_dependency(*dep)
             end
+            deflator = Zlib::Deflate.new
             create_file('quick', marshal_path, "#{name}-#{version}.gemspec.rz") do |file|
-              file.write(Marshal.dump(spec))
+              file.write(deflator.deflate(Marshal.dump(spec), Zlib::SYNC_FLUSH))
+              file.write(deflator.finish)
             end
           end
         end
