@@ -61,5 +61,4 @@ Commands that must be available within the path:
 * `expect`
 
 ## Infos
-* Repository: https://github.com/hw-labs/reaper-man
-* IRC: Freenode @ #heavywater
+* Repository: https://github.com/spox/reaper-man
