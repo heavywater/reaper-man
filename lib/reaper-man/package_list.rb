@@ -13,6 +13,9 @@ module ReaperMan
       include Utils::Process
       include Utils::Checksum
 
+      def initialize(_={})
+      end
+
       # Add a package to the list
       #
       # @param conf [Hash]
