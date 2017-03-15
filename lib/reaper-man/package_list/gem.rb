@@ -38,14 +38,14 @@ module ReaperMan
         # @param package [String] path to package
         # @return [Hash]
         def extract_fields(package)
-          spec = ::Gem::Package.open(File.open(package)){|pack| pack.metadata}
+          spec = ::Gem::Package.new(package).spec
           fields = Smash[
             spec.to_yaml_properties.map do |var_name|
               [var_name.to_s.tr('@', ''), spec.instance_variable_get(var_name)]
             end
           ]
           fields['dependencies'] = fields['dependencies'].map do |dep|
-            [dep.name, dep.requirement.to_s]
+            [dep.name, dep.requirement.to_s.split(',').map(&:strip)]
           end
           fields
         end
