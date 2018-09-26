@@ -54,7 +54,7 @@ module ReaperMan
           list.each do |version, info|
             spec = Gem::Specification.new(name)
             info.each do |var, value|
-              if(spec.respond_to?("#{var}="))
+              if(value && spec.respond_to?("#{var}="))
                 begin
                   # Ensure we convert Smash instances
                   value = value.to_hash if value.is_a?(Hash)
