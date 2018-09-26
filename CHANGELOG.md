@@ -1,3 +1,6 @@
+# v0.1.8
+* [fix] only set specification value when value is set
+
 # v0.1.6
 * [fix] update gem spec loading and requirement building for package list
 * [fix] deflate contents of quick specs on gem repositories
