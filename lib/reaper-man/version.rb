@@ -1,4 +1,4 @@
 module ReaperMan
   # current library version
-  VERSION = Gem::Version.new("0.1.8")
+  VERSION = Gem::Version.new("0.1.9")
 end
