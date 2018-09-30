@@ -1,3 +1,7 @@
+# v0.1.10
+* [fix] extract rubygem specification data via proper API
+* [enhancement] clean rubygems package data to remove empty values
+
 # v0.1.8
 * [fix] only set specification value when value is set
 
