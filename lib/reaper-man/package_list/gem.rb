@@ -11,6 +11,10 @@ module ReaperMan
         # @param conf [Hash]
         # @param package [String] path to package
         def add(hash, package)
+          unless hash.to_smash.get(:rubygem, :clean)
+            hash["rubygem"] = clean(hash["rubygem"])
+            hash["rubygem"]["clean"] = true
+          end
           info = extract_fields(package)
           filenames = inject_package(hash, info, package)
           filenames
@@ -40,12 +44,18 @@ module ReaperMan
         def extract_fields(package)
           spec = ::Gem::Package.new(package).spec
           fields = Smash[
-            spec.to_yaml_properties.map do |var_name|
-              [var_name.to_s.tr("@", ""), spec.instance_variable_get(var_name)]
-            end
+            spec.class.attribute_names.map do |var_name|
+              value = spec.send(var_name)
+              next if value.nil? || (value.respond_to?(:empty?) && value.empty?)
+              [var_name, value]
+            end.compact
           ]
           fields["dependencies"] = fields["dependencies"].map do |dep|
             [dep.name, dep.requirement.to_s.split(",").map(&:strip)]
+          end
+          if fields["required_ruby_version"]
+            fields["required_ruby_version"] = fields["required_ruby_version"].
+              to_s.split(",").map(&:strip)
           end
           fields
         end
@@ -72,6 +82,20 @@ module ReaperMan
             },
           )
           package_path
+        end
+
+        # Clean data hash of empty values
+        #
+        # @param hash [Hash] package list information
+        # @return [Smash]
+        def clean(hash)
+          Smash[
+            hash.map{|k,v|
+              v = clean(v) if v.is_a?(Hash)
+              next if v.nil? || (v.respond_to?(:empty?) && v.empty?)
+              [k, v]
+            }
+          ]
         end
       end
     end
