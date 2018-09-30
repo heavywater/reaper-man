@@ -1,11 +1,9 @@
-require 'reaper-man'
+require "reaper-man"
 
 module ReaperMan
   class Command
     class Package
-
       class Remove < Package
-
         def execute!
           arguments.each do |pkg|
             run_action "Remove package from repository manifest: #{pkg}" do
@@ -16,9 +14,7 @@ module ReaperMan
             end
           end
         end
-
       end
-
     end
   end
 end

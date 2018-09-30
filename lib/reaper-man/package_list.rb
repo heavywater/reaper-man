@@ -1,19 +1,19 @@
-require 'multi_json'
-require 'reaper-man'
+require "multi_json"
+require "reaper-man"
 
 module ReaperMan
   # Package list for repository
   class PackageList
     # Package list modification processor
     class Processor
-      autoload :Rpm, 'reaper-man/package_list/rpm'
-      autoload :Deb, 'reaper-man/package_list/deb'
-      autoload :Gem, 'reaper-man/package_list/gem'
+      autoload :Rpm, "reaper-man/package_list/rpm"
+      autoload :Deb, "reaper-man/package_list/deb"
+      autoload :Gem, "reaper-man/package_list/gem"
 
       include Utils::Process
       include Utils::Checksum
 
-      def initialize(_={})
+      def initialize(_ = {})
       end
 
       # Add a package to the list
@@ -21,7 +21,7 @@ module ReaperMan
       # @param conf [Hash]
       # @param package [String] path to package
       def add(conf, package)
-        raise NoMethodError.new 'Not implemented'
+        raise NoMethodError.new "Not implemented"
       end
 
       # Remove package from the list
@@ -29,8 +29,8 @@ module ReaperMan
       # @param conf [Hash] configuration hash
       # @param package_name [String] name
       # @param version [String]
-      def remove(conf, package_name, version=nil)
-        raise NoMethodError.new 'Not implemented'
+      def remove(conf, package_name, version = nil)
+        raise NoMethodError.new "Not implemented"
       end
     end
 
@@ -47,7 +47,7 @@ module ReaperMan
     #
     # @param path [String] path to package list
     # @param args [Hash] configuration
-    def initialize(path, args={})
+    def initialize(path, args = {})
       @path = path
       @options = args.dup
       @content = Smash.new
@@ -58,16 +58,16 @@ module ReaperMan
     #
     # @param package [Array<String>] path to package file
     def add_package(package)
-      [package_handler(File.extname(package).tr('.', '')).add(content, package)].flatten.compact
+      [package_handler(File.extname(package).tr(".", "")).add(content, package)].flatten.compact
     end
 
     # Remove package from the package list file
     #
     # @param package [String] name of package
     # @param version [String] version of file
-    def remove_package(package, version=nil)
-      ext = File.extname(package).tr('.', '')
-      if(ext.empty?)
+    def remove_package(package, version = nil)
+      ext = File.extname(package).tr(".", "")
+      if ext.empty?
         ext = %w(deb) # rpm)
       else
         ext = [ext]
@@ -87,9 +87,9 @@ module ReaperMan
     # @return [Integer] number of bytes written
     def write!
       new_file = !File.exists?(path)
-      File.open(path, File::CREAT|File::RDWR) do |file|
+      File.open(path, File::CREAT | File::RDWR) do |file|
         file.flock(File::LOCK_EX)
-        if(!new_file && init_mtime != file.mtime)
+        if !new_file && init_mtime != file.mtime
           file.rewind
           content.deep_merge!(
             MultiJson.load(
@@ -118,13 +118,12 @@ module ReaperMan
       @init_mtime = File.mtime(path)
       content.deep_merge!(
         MultiJson.load(
-          File.open(path, 'r') do |file|
+          File.open(path, "r") do |file|
             file.flock(File::LOCK_SH)
             file.read
           end
         )
       )
     end
-
   end
 end

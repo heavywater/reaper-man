@@ -1,7 +1,7 @@
-require 'reaper-man'
-require 'childprocess'
-require 'shellwords'
-require 'tempfile'
+require "reaper-man"
+require "childprocess"
+require "shellwords"
+require "tempfile"
 
 module ReaperMan
   module Utils
@@ -14,7 +14,8 @@ module ReaperMan
 
       class CommandFailed < StandardError
         attr_accessor :original, :result
-        def initialize(orig, result=nil)
+
+        def initialize(orig, result = nil)
           @original = orig
           @result = result
           super(orig.to_s)
@@ -26,11 +27,12 @@ module ReaperMan
 
       class CommandResult
         attr_reader :original, :stdout, :stderr
+
         def initialize(result)
           @original = result
-          if(result.class.ancestors.map(&:to_s).include?('ChildProcess::AbstractProcess'))
+          if result.class.ancestors.map(&:to_s).include?("ChildProcess::AbstractProcess")
             extract_childprocess
-          elsif(result.class.to_s == 'Mixlib::ShellOut')
+          elsif result.class.to_s == "Mixlib::ShellOut"
             extract_shellout
           else
             raise TypeError.new("Unknown process result type received: #{result.class}")
@@ -53,9 +55,9 @@ module ReaperMan
       end
 
       # Simple helper to shell out
-      def shellout(cmd, args={})
+      def shellout(cmd, args = {})
         result = nil
-        if(defined?(Mixlib))
+        if defined?(Mixlib)
           cmd_type = :mixlib_shellout
         else
           cmd_type = :childprocess
@@ -63,20 +65,20 @@ module ReaperMan
         com_block = nil
         case cmd_type
         when :childprocess
-          com_block = lambda{ child_process_command(cmd, args) }
+          com_block = lambda { child_process_command(cmd, args) }
         when :mixlib_shellout
-          require 'mixlib/shellout'
-          com_block = lambda{ mixlib_shellout_command(cmd, args) }
+          require "mixlib/shellout"
+          com_block = lambda { mixlib_shellout_command(cmd, args) }
         else
           raise ArgumentError.new("Unknown shellout helper provided: #{cmd_type}")
         end
-        result = defined?(Bundler) ? Bundler.with_clean_env{ com_block.call } : com_block.call
+        result = defined?(Bundler) ? Bundler.with_clean_env { com_block.call } : com_block.call
         result == false ? false : CommandResult.new(result)
       end
 
       def child_process_command(cmd, args)
-        s_out = Tempfile.new('stdout')
-        s_err = Tempfile.new('stderr')
+        s_out = Tempfile.new("stdout")
+        s_err = Tempfile.new("stderr")
         s_out.sync
         s_err.sync
         c_proc = ChildProcess.build(*Shellwords.split(cmd))
@@ -98,9 +100,8 @@ module ReaperMan
         shlout = nil
         begin
           shlout = Mixlib::ShellOut.new(cmd,
-            :timeout => args[:timeout] || 10,
-            :environment => args.fetch(:environment, {})
-          )
+                                        :timeout => args[:timeout] || 10,
+                                        :environment => args.fetch(:environment, {}))
           shlout.run_command
           shlout.error!
           shlout
@@ -108,7 +109,6 @@ module ReaperMan
           raise CommandFailed.new(e, CommandResult.new(shlout))
         end
       end
-
     end
   end
 end

@@ -1,4 +1,4 @@
-require 'reaper-man'
+require "reaper-man"
 
 module ReaperMan
   class Signer
@@ -12,13 +12,13 @@ module ReaperMan
       def package(*pkgs)
         pkgs = valid_packages(*pkgs)
         pkgs.each_slice(sign_chunk_size) do |pkgs|
-          cmd = %(rpmsign --resign --key-id="#{key_id}" #{pkgs.join(' ')})
-          if(key_password)
+          cmd = %(rpmsign --resign --key-id="#{key_id}" #{pkgs.join(" ")})
+          if key_password
             shellout(
               "#{Signer::HELPER_COMMAND} #{cmd}",
               :environment => {
-                'REAPER_KEY_PASSWORD' => key_password
-              }
+                "REAPER_KEY_PASSWORD" => key_password,
+              },
             )
           else
             shellout(cmd)
@@ -33,10 +33,9 @@ module ReaperMan
       # @return [Array<String>]
       def valid_packages(*pkgs)
         pkgs.find_all do |pkg|
-          File.extname(pkg) == '.rpm'
+          File.extname(pkg) == ".rpm"
         end
       end
-
     end
   end
 end

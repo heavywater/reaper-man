@@ -1,4 +1,4 @@
-require 'reaper-man'
+require "reaper-man"
 
 module ReaperMan
   class Generator
@@ -18,9 +18,9 @@ module ReaperMan
       end
 
       def generate_indexing(gems)
-        build_spec_file('specs', gems.fetch(:release, {}))
-        build_spec_file('latest_specs', gems.fetch(:release, {}))
-        build_spec_file('prerelease', gems.fetch(:prerelease, {}))
+        build_spec_file("specs", gems.fetch(:release, {}))
+        build_spec_file("latest_specs", gems.fetch(:release, {}))
+        build_spec_file("prerelease", gems.fetch(:prerelease, {}))
       end
 
       def create_index(gems)
@@ -34,11 +34,11 @@ module ReaperMan
       end
 
       def marshal_path
-        ['Marshal', marshal_version].join('.')
+        ["Marshal", marshal_version].join(".")
       end
 
       def marshal_version
-        [Marshal::MAJOR_VERSION, Marshal::MINOR_VERSION].join('.')
+        [Marshal::MAJOR_VERSION, Marshal::MINOR_VERSION].join(".")
       end
 
       def build_spec_file(name, gems)
@@ -54,7 +54,7 @@ module ReaperMan
           list.each do |version, info|
             spec = Gem::Specification.new(name)
             info.each do |var, value|
-              if(value && spec.respond_to?("#{var}="))
+              if value && spec.respond_to?("#{var}=")
                 begin
                   # Ensure we convert Smash instances
                   value = value.to_hash if value.is_a?(Hash)
@@ -70,7 +70,7 @@ module ReaperMan
               spec.add_dependency(*dep)
             end
             deflator = Zlib::Deflate.new
-            create_file('quick', marshal_path, "#{name}-#{version}.gemspec.rz") do |file|
+            create_file("quick", marshal_path, "#{name}-#{version}.gemspec.rz") do |file|
               file.write(deflator.deflate(Marshal.dump(spec), Zlib::SYNC_FLUSH))
               file.write(deflator.finish)
             end
@@ -84,12 +84,11 @@ module ReaperMan
       # @return [String] file path
       def sign_file_if_setup
         path = yield
-        if(signer && options[:sign])
+        if signer && options[:sign]
           signer.file(path)
         end
         path
       end
-
     end
   end
 end

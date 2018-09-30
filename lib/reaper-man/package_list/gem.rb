@@ -1,5 +1,5 @@
-require 'reaper-man'
-require 'rubygems/package'
+require "reaper-man"
+require "rubygems/package"
 
 module ReaperMan
   class PackageList
@@ -21,13 +21,13 @@ module ReaperMan
         # @param conf [Hash] configuration hash
         # @param package_name [String] name
         # @param version [String]
-        def remove(hash, package_name, version, args={})
+        def remove(hash, package_name, version, args = {})
           deleted = false
-          if(hash['rubygems'][package_name])
-            if(version)
-              deleted = hash['rubygems'][package_name].delete(version)
+          if hash["rubygems"][package_name]
+            if version
+              deleted = hash["rubygems"][package_name].delete(version)
             else
-              deleted = hash['rubygems'].delete(package_name)
+              deleted = hash["rubygems"].delete(package_name)
             end
           end
           !!deleted
@@ -41,11 +41,11 @@ module ReaperMan
           spec = ::Gem::Package.new(package).spec
           fields = Smash[
             spec.to_yaml_properties.map do |var_name|
-              [var_name.to_s.tr('@', ''), spec.instance_variable_get(var_name)]
+              [var_name.to_s.tr("@", ""), spec.instance_variable_get(var_name)]
             end
           ]
-          fields['dependencies'] = fields['dependencies'].map do |dep|
-            [dep.name, dep.requirement.to_s.split(',').map(&:strip)]
+          fields["dependencies"] = fields["dependencies"].map do |dep|
+            [dep.name, dep.requirement.to_s.split(",").map(&:strip)]
           end
           fields
         end
@@ -58,22 +58,21 @@ module ReaperMan
         # @return [Array<String>] package paths within package list contents
         def inject_package(hash, info, package)
           package_path = File.join(
-            'rubygems', 'gems', "#{info['name']}-#{info['version']}.gem"
+            "rubygems", "gems", "#{info["name"]}-#{info["version"]}.gem"
           )
-          classification = info['version'].prerelease? ? 'prerelease' : 'release'
-          info['version'] = info['version'].version
+          classification = info["version"].prerelease? ? "prerelease" : "release"
+          info["version"] = info["version"].version
           hash.deep_merge!(
-            'rubygem' => {
+            "rubygem" => {
               classification => {
-                info['name'] => {
-                  info['version'].to_s => info.merge('package_path' => package_path)
-                }
-              }
-            }
+                info["name"] => {
+                  info["version"].to_s => info.merge("package_path" => package_path),
+                },
+              },
+            },
           )
           package_path
         end
-
       end
     end
   end

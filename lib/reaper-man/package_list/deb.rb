@@ -1,4 +1,4 @@
-require 'reaper-man'
+require "reaper-man"
 
 module ReaperMan
   class PackageList
@@ -20,11 +20,11 @@ module ReaperMan
         attr_reader :package_bucket
 
         # default package root prefix
-        DEFAULT_ROOT = 'pool'
+        DEFAULT_ROOT = "pool"
         # default namespace for packages
-        DEFAULT_BUCKET = 'public'
+        DEFAULT_BUCKET = "public"
         # default architectures to define
-        DEFAULT_ALL_MAP = ['amd64', 'i386']
+        DEFAULT_ALL_MAP = ["amd64", "i386"]
 
         # Create new instance
         #
@@ -35,14 +35,14 @@ module ReaperMan
         # @option args [String] :package_root
         # @option args [String] :package_bucket
         # @option args [Array<String>] :all_map
-        def initialize(args={})
+        def initialize(args = {})
           @origin = args[:origin].to_s
           @dist = args[:codename].to_s
           @component = args[:component].to_s
           @package_root = args.fetch(:package_root, DEFAULT_ROOT)
           @package_bucket = args.fetch(:package_bucket, DEFAULT_BUCKET)
-          if(dist.empty? || component.empty?)
-            raise 'Both `codename` and `component` must contain valid values'
+          if dist.empty? || component.empty?
+            raise "Both `codename` and `component` must contain valid values"
           end
           @all_map = args.fetch(:all_map, DEFAULT_ALL_MAP)
         end
@@ -63,14 +63,14 @@ module ReaperMan
         # @param conf [Hash] configuration hash
         # @param package_name [String] name
         # @param version [String]
-        def remove(hash, package_name, version, args={})
+        def remove(hash, package_name, version, args = {})
           hash = hash.to_smash
           arch = [args.fetch(:arch, all_map)].flatten.compact
           deleted = false
           arch.each do |arch_name|
             arch_name = "binary-#{arch_name}"
-            if(hash.get(:apt, origin, dist, :components, component, arch_name, package_name))
-              if(version)
+            if hash.get(:apt, origin, dist, :components, component, arch_name, package_name)
+              if version
                 deleted = hash[:apt][origin][dist][:components][component][arch_name][package_name].delete(version)
               else
                 deleted = hash[:apt][origin][dist][:components][component][arch_name].delete(package_name)
@@ -86,7 +86,7 @@ module ReaperMan
         # @return [Hash]
         def extract_fields(package)
           content = shellout("dpkg-deb -f '#{package}'")
-          Smash[content.stdout.scan(/([^\s][^:]+):\s+(([^\n]|\n\s)+)/).map{|a| a.slice(0,2)}]
+          Smash[content.stdout.scan(/([^\s][^:]+):\s+(([^\n]|\n\s)+)/).map { |a| a.slice(0, 2) }]
         end
 
         # Insert package information into package list
@@ -96,8 +96,8 @@ module ReaperMan
         # @param package [String] path to package file
         # @return [Array<String>] package paths within package list contents
         def inject_package(hash, info, package)
-          arch = info['Architecture']
-          arch = arch == 'all' ? all_map : [arch]
+          arch = info["Architecture"]
+          arch = arch == "all" ? all_map : [arch]
           arch.map do |arch|
             package_file_name = File.join(
               package_root, package_bucket, origin,
@@ -105,28 +105,27 @@ module ReaperMan
               File.basename(package)
             )
             hash.deep_merge!(
-              'apt' => {
+              "apt" => {
                 origin => {
                   dist => {
-                    'components' => {
+                    "components" => {
                       component => {
                         "binary-#{arch}" => {
-                          info['Package'] => {
-                            info['Version'] => info.merge!(
-                              'Filename' => package_file_name,
-                              'Size' => File.size(package)
-                            )
-                          }
+                          info["Package"] => {
+                            info["Version"] => info.merge!(
+                              "Filename" => package_file_name,
+                              "Size" => File.size(package),
+                            ),
+                          },
                         },
-                        "binary-i386" => {
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+                        "binary-i386" => {},
+                      },
+                    },
+                  },
+                },
+              },
             )
-            File.join('apt', origin, package_file_name)
+            File.join("apt", origin, package_file_name)
           end
         end
 
@@ -135,15 +134,14 @@ module ReaperMan
         # @param package [String] path to package file
         # @return [Hash] checksums
         def generate_checksums(package)
-          File.open(package, 'r') do |pkg|
+          File.open(package, "r") do |pkg|
             {
-              'MD5sum' => checksum(pkg.rewind && pkg, :md5),
-              'SHA1' => checksum(pkg.rewind && pkg, :sha1),
-              'SHA256' => checksum(pkg.rewind && pkg, :sha256)
+              "MD5sum" => checksum(pkg.rewind && pkg, :md5),
+              "SHA1" => checksum(pkg.rewind && pkg, :sha1),
+              "SHA256" => checksum(pkg.rewind && pkg, :sha256),
             }
           end
         end
-
       end
     end
   end

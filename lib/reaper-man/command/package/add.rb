@@ -1,11 +1,9 @@
-require 'reaper-man'
+require "reaper-man"
 
 module ReaperMan
   class Command
     class Package
-
       class Add < Package
-
         def execute!
           arguments.each do |path|
             run_action "Adding package to repository manifest: #{path}" do
@@ -16,9 +14,7 @@ module ReaperMan
             end
           end
         end
-
       end
-
     end
   end
 end

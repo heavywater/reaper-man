@@ -1,4 +1,4 @@
-require 'reaper-man'
+require "reaper-man"
 
 module ReaperMan
   class PackageList
@@ -20,11 +20,11 @@ module ReaperMan
         attr_reader :package_bucket
 
         # default package root prefix
-        DEFAULT_ROOT = 'pool'
+        DEFAULT_ROOT = "pool"
         # default namespace for packages
-        DEFAULT_BUCKET = 'public'
+        DEFAULT_BUCKET = "public"
         # default architectures to define
-        DEFAULT_ALL_MAP = ['amd64', 'i386']
+        DEFAULT_ALL_MAP = ["amd64", "i386"]
 
         # Create new instance
         #
@@ -35,14 +35,14 @@ module ReaperMan
         # @option args [String] :package_root
         # @option args [String] :package_bucket
         # @option args [Array<String>] :all_map
-        def initialize(args={})
+        def initialize(args = {})
           @origin = args[:origin].to_s
           @dist = args[:codename].to_s
           @component = args[:component].to_s
           @package_root = args.fetch(:package_root, DEFAULT_ROOT)
           @package_bucket = args.fetch(:package_bucket, DEFAULT_BUCKET)
-          if(dist.empty? || component.empty?)
-            raise 'Both `codename` and `component` must contain valid values'
+          if dist.empty? || component.empty?
+            raise "Both `codename` and `component` must contain valid values"
           end
           @all_map = args.fetch(:all_map, DEFAULT_ALL_MAP)
         end
@@ -63,14 +63,14 @@ module ReaperMan
         # @param conf [Hash] configuration hash
         # @param package_name [String] name
         # @param version [String]
-        def remove(hash, package_name, version, args={})
+        def remove(hash, package_name, version, args = {})
           hash = hash.to_smash
           arch = [args.fetch(:arch, all_map)].flatten.compact
           deleted = false
           arch.each do |arch_name|
             arch_name = "binary-#{arch_name}"
-            if(hash.get(:yum, origin, dist, :components, component, arch_name, package_name))
-              if(version)
+            if hash.get(:yum, origin, dist, :components, component, arch_name, package_name)
+              if version
                 deleted = hash[:yum][origin][dist][:components][component][arch_name][package_name].delete(version)
               else
                 deleted = hash[:yum][origin][dist][:components][component][arch_name].delete(package_name)
@@ -85,9 +85,9 @@ module ReaperMan
         # @param package [String] path to package
         # @return [Hash]
         def extract_fields(package)
-          fields = shellout('rpm --querytags').stdout.split("\n").map do |line|
+          fields = shellout("rpm --querytags").stdout.split("\n").map do |line|
             line.strip!
-            unless(line.empty? || line.start_with?('HEADER'))
+            unless line.empty? || line.start_with?("HEADER")
               line
             end
           end.compact
@@ -97,18 +97,18 @@ module ReaperMan
           end.flatten.join("\n")
 
           cmd = "rpm -q -p #{package} --queryformat 'output:\n#{fmt}'"
-          result = shellout(cmd).stdout.sub(/.*output:/, '')
+          result = shellout(cmd).stdout.sub(/.*output:/, "")
 
           data = Smash.new
           key = nil
           result.split("\n").each do |item|
             item.strip!
             next if item.empty?
-            if(item.start_with?('[') && item.end_with?(']'))
-              key = item.tr('[]', '')
+            if item.start_with?("[") && item.end_with?("]")
+              key = item.tr("[]", "")
             else
-              if(data[key])
-                if(!data[key].is_a?(Array))
+              if data[key]
+                if !data[key].is_a?(Array)
                   data[key] = [data[key]]
                 end
                 data[key] << item
@@ -117,7 +117,7 @@ module ReaperMan
               end
             end
           end
-          data[:generated_sha] = checksum(File.open(package, 'r'), :sha1)
+          data[:generated_sha] = checksum(File.open(package, "r"), :sha1)
           data[:generated_size] = File.size(package)
           data[:generated_header] = extract_header_information(package)
           data
@@ -130,31 +130,31 @@ module ReaperMan
         # @param package [String] path to package file
         # @return [Array<String>] package paths within package list contents
         def inject_package(hash, info, package)
-          arch = info['ARCH']
-          arch = arch == 'all' ? all_map : [arch]
+          arch = info["ARCH"]
+          arch = arch == "all" ? all_map : [arch]
           arch.map do |arch|
             package_file_name = File.join(
               package_root, package_bucket, origin,
               dist, component, File.basename(package)
             )
             hash.deep_merge!(
-              'yum' => {
+              "yum" => {
                 origin => {
                   dist => {
-                    'components' => {
+                    "components" => {
                       component => {
                         arch => {
-                          info['NAME'] => {
-                            info['NEVR'] => info.merge(:generated_path => package_file_name)
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+                          info["NAME"] => {
+                            info["NEVR"] => info.merge(:generated_path => package_file_name),
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             )
-            File.join('yum', origin, package_file_name)
+            File.join("yum", origin, package_file_name)
           end
         end
 
@@ -163,11 +163,11 @@ module ReaperMan
         # @param package [String] path to package file
         # @return [Hash] checksums
         def generate_checksums(package)
-          File.open(package, 'r') do |pkg|
+          File.open(package, "r") do |pkg|
             {
-              'MD5sum' => checksum(pkg.rewind && pkg, :md5),
-              'SHA1' => checksum(pkg.rewind && pkg, :sha1),
-              'SHA256' => checksum(pkg.rewind && pkg, :sha256)
+              "MD5sum" => checksum(pkg.rewind && pkg, :md5),
+              "SHA1" => checksum(pkg.rewind && pkg, :sha1),
+              "SHA256" => checksum(pkg.rewind && pkg, :sha256),
             }
           end
         end
@@ -179,15 +179,15 @@ module ReaperMan
         # @return [Smash<start,end>]
         # @note ported from: http://yum.baseurl.org/gitweb?p=yum.git;a=blob;f=yum/packages.py;h=eebeb9dfd264b887b054187276cea12ced3a0bc2;hb=HEAD#l2212
         def extract_header_information(package)
-          io = File.open(package, 'rb')
+          io = File.open(package, "rb")
 
           # read past lead and 8 bytes of signature header
           io.seek(104)
           binindex = io.read(4)
-          sigindex, _ = binindex.unpack('I>')
+          sigindex, _ = binindex.unpack("I>")
 
           bindata = io.read(4)
-          sigdata, _ = bindata.unpack('I>')
+          sigdata, _ = bindata.unpack("I>")
 
           # seeked in to 112 bytes
 
@@ -199,7 +199,7 @@ module ReaperMan
           # Round to next 8 byte boundary
 
           disttoboundary = (sigsize % 8)
-          unless(disttoboundary == 0)
+          unless disttoboundary == 0
             disttoboundary = 8 - disttoboundary
           end
 
@@ -216,9 +216,9 @@ module ReaperMan
 
           binindex = io.read(4)
 
-          hdrindex, _ = binindex.unpack('I>')
+          hdrindex, _ = binindex.unpack("I>")
           bindata = io.read(4)
-          hdrdata, _ = bindata.unpack('I>')
+          hdrdata, _ = bindata.unpack("I>")
 
           # each index is 4 32bit segments - so each is 16 bytes
 
@@ -235,10 +235,9 @@ module ReaperMan
 
           Smash.new(
             :start => hdrstart,
-            :end => hdrend
+            :end => hdrend,
           )
         end
-
       end
     end
   end

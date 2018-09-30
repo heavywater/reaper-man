@@ -1,16 +1,15 @@
-require 'time'
-require 'zlib'
-require 'fileutils'
+require "time"
+require "zlib"
+require "fileutils"
 
-require 'reaper-man'
+require "reaper-man"
 
 module ReaperMan
   # Repository generator
   class Generator
-
-    autoload :Apt, 'reaper-man/generator/apt'
-    autoload :Yum, 'reaper-man/generator/yum'
-    autoload :Rubygems, 'reaper-man/generator/rubygems'
+    autoload :Apt, "reaper-man/generator/apt"
+    autoload :Yum, "reaper-man/generator/yum"
+    autoload :Rubygems, "reaper-man/generator/rubygems"
 
     include Utils::Checksum
 
@@ -29,17 +28,17 @@ module ReaperMan
     # @option args [String] :package_system apt/gem/etc...
     # @option args [Hash] :package_config
     # @option args [Signer] :signer
-    def initialize(args={})
+    def initialize(args = {})
       @package_system = args[:package_system]
       @package_config = args.fetch(:package_config, Smash.new)
       @signer = args[:signer]
       @options = args
-      extend self.class.const_get(package_system.to_s.split('_').map(&:capitalize).join.to_sym)
+      extend self.class.const_get(package_system.to_s.split("_").map(&:capitalize).join.to_sym)
     end
 
     # Generate new repository
     def generate!
-      raise NoMethodError.new 'Not implemented'
+      raise NoMethodError.new "Not implemented"
     end
 
     # Create new file
@@ -51,8 +50,8 @@ module ReaperMan
     def create_file(*name)
       path = File.join(options[:output_directory], *name)
       FileUtils.mkdir_p(File.dirname(path))
-      file = File.open(path, 'wb+')
-      if(block_given?)
+      file = File.open(path, "wb+")
+      if block_given?
         yield file
       end
       file.close unless file.closed?
@@ -68,8 +67,8 @@ module ReaperMan
     def for_file(*name)
       path = File.join(options[:output_directory], *name)
       FileUtils.mkdir_p(File.dirname(path))
-      if(block_given?)
-        file = File.open(path, 'a+')
+      if block_given?
+        file = File.open(path, "a+")
         yield file
         file.close
       end
@@ -86,13 +85,11 @@ module ReaperMan
       base_file = File.open(for_file(path))
       create_file(compressed_path) do |file|
         compressor = Zlib::GzipWriter.new(file)
-        while(data = base_file.read(2048))
+        while data = base_file.read(2048)
           compressor.write(data)
         end
         compressor.close
       end
     end
-
   end
-
 end

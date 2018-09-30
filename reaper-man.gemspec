@@ -14,6 +14,9 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "childprocess"
   s.add_runtime_dependency "xml-simple"
   s.add_development_dependency "minitest"
+  s.add_development_dependency "rufo", "~> 0.3.0"
+  s.add_development_dependency "rake", "~> 10"
+  s.add_development_dependency "rspec", "~> 3.5"
   s.executables << "reaper-man"
   s.files = Dir["lib/**/*"] + %w(reaper-man.gemspec README.md CHANGELOG.md CONTRIBUTING.md LICENSE)
 end
