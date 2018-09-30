@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/spox/reaper-man"
   s.description = "Grow code, reap packages"
   s.require_path = "lib"
-  s.required_ruby_version = "~> 2.2", "< 2.5"
+  s.required_ruby_version = "~> 2.2", "< 2.6"
   s.add_runtime_dependency "bogo-cli"
   s.add_runtime_dependency "childprocess"
   s.add_runtime_dependency "xml-simple"
