@@ -11,7 +11,7 @@ module ReaperMan
         # @param conf [Hash]
         # @param package [String] path to package
         def add(hash, package)
-          unless hash.to_smash.get(:rubygem, :clean)
+          if hash["rubygem"] && !hash.to_smash.get(:rubygem, :clean)
             hash["rubygem"] = clean(hash["rubygem"])
             hash["rubygem"]["clean"] = true
           end
@@ -90,7 +90,7 @@ module ReaperMan
         # @return [Smash]
         def clean(hash)
           Smash[
-            hash.map{|k,v|
+            hash.map { |k, v|
               v = clean(v) if v.is_a?(Hash)
               next if v.nil? || (v.respond_to?(:empty?) && v.empty?)
               [k, v]
