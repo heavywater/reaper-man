@@ -50,8 +50,10 @@ module ReaperMan
               [var_name, value]
             end.compact
           ]
-          fields["dependencies"] = fields["dependencies"].map do |dep|
-            [dep.name, dep.requirement.to_s.split(",").map(&:strip)]
+          if fields["dependencies"]
+            fields["dependencies"] = fields["dependencies"].map do |dep|
+              [dep.name, dep.requirement.to_s.split(",").map(&:strip)]
+            end
           end
           if fields["required_ruby_version"]
             fields["required_ruby_version"] = fields["required_ruby_version"].
