@@ -1,3 +1,6 @@
+# v0.1.12
+* [fix] Only map dependencies when dependencies are defined
+
 # v0.1.10
 * [fix] extract rubygem specification data via proper API
 * [enhancement] clean rubygems package data to remove empty values
