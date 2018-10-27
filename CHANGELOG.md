@@ -1,3 +1,6 @@
+# v0.1.14
+* [fix] Ignore undefined dependencies during repo generation
+
 # v0.1.12
 * [fix] Only map dependencies when dependencies are defined
 
