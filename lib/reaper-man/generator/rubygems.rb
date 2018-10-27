@@ -66,8 +66,10 @@ module ReaperMan
             end
             spec.version = Gem::Version.new(info[:version])
             spec.date = Time.parse(info[:date])
-            info[:dependencies].each do |dep|
-              spec.add_dependency(*dep)
+            if info[:dependencies]
+              info[:dependencies].each do |dep|
+                spec.add_dependency(*dep)
+              end
             end
             deflator = Zlib::Deflate.new
             create_file("quick", marshal_path, "#{name}-#{version}.gemspec.rz") do |file|
