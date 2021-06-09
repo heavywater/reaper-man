@@ -44,7 +44,7 @@ or remove a specific version
 ### Create a repository
 
 ```
-> reaper-man repo create --packages-file registry.json --package-system apt --output-directory /tmp/test-repo
+> reaper-man repo generate --packages-file registry.json --package-system apt --output-directory /tmp/test-repo
 ```
 
 This can also be used to update an existing repository structure.
