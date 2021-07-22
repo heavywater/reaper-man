@@ -1,3 +1,6 @@
+# v0.1.16
+* [enhancement] Update Ruby version constraints
+
 # v0.1.14
 * [fix] Ignore undefined dependencies during repo generation
 
