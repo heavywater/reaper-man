@@ -1,3 +1,7 @@
+# v0.1.17
+* [enhancement] Add global debug flag
+* [enhancement] Validate path for package list 
+
 # v0.1.16
 * [enhancement] Update Ruby version constraints
 
