@@ -11,6 +11,7 @@ Bogo::Cli::Setup.define do
   end
 
   common_options = lambda do
+    on :d, :debug, 'Enable debug output'
     on :c, :config=, 'Path to configuration file'
     on :k, :'signing-key=', 'Path to key for signing generated files'
     on :t, :'signing-type=', 'Signing type name'
