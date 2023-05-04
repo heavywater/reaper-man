@@ -48,6 +48,9 @@ module ReaperMan
     # @param path [String] path to package list
     # @param args [Hash] configuration
     def initialize(path, args = {})
+      if path.nil? || path.empty?
+        raise ArgumentError, "Path is required"
+      end
       @path = path
       @options = args.dup
       @content = Smash.new
